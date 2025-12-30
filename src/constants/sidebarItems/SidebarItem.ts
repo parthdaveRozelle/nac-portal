@@ -3,31 +3,32 @@ import MedicationIcon from "@mui/icons-material/Medication";
 import DescriptionIcon from "@mui/icons-material/Description";
 import SyncIcon from "@mui/icons-material/Sync";
 import HistoryIcon from "@mui/icons-material/History";
+import { ROUTES } from "../routes";
 
 export const SIDEBAR_ITEMS = [
   {
     text: "Dashboard",
     icon: DashboardIcon,
-    route: "/",
+    route: ROUTES.DASHBOARD,
   },
   {
     text: "Medications",
     icon: MedicationIcon,
-    route: "/medications",
+    route: ROUTES.MEDICATIONS,
   },
   {
     text: "Guidelines",
     icon: DescriptionIcon,
-    route: "/guidelines",
+    route: ROUTES.GUIDELINES,
   },
   {
     text: "Sync",
     icon: SyncIcon,
-    route: "/sync",
+    route: ROUTES.SYNC,
   },
   {
     text: "Audit",
     icon: HistoryIcon,
-    route: "/audit",
+    route: ROUTES.AUDIT,
   },
 ];

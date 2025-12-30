@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { SideBarItems } from "@/components";
 import { IReactNode } from "@/interfaces";
+import { ROUTES } from "@/constants";
 
 const drawerWidth: number = 240;
 
@@ -130,7 +131,7 @@ export const DashboardProvider = ({ children }: IReactNode) => {
               height={40}
               priority
               style={{ cursor: "pointer", objectFit: "contain" }}
-              onClick={() => router.push("/")}
+              onClick={() => router.push(ROUTES.DASHBOARD)}
             />
             <Box
               sx={{
