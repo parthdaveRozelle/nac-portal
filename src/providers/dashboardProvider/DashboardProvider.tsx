@@ -3,6 +3,7 @@
 import {
   Avatar,
   Box,
+  Button,
   Container,
   Divider,
   IconButton,
@@ -23,6 +24,13 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { SideBarItems } from "@/components";
 import { IReactNode } from "@/interfaces";
 import { ROUTES } from "@/constants";
+import { useUserDetails } from "@/customhooks";
+import LogoutIcon from "@mui/icons-material/Logout";
+import {
+  resetOrganizationPermission,
+  resetUserVerification,
+  useAppDispatch,
+} from "@/store";
 
 const drawerWidth: number = 240;
 
@@ -95,6 +103,8 @@ export const DashboardProvider = ({ children }: IReactNode) => {
   const theme = useTheme();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const user = useUserDetails();
+  const dispatch = useAppDispatch();
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -143,19 +153,31 @@ export const DashboardProvider = ({ children }: IReactNode) => {
               }}
             >
               <Avatar alt="N" sx={{ color: "white", mb: 0.6 }} />
-              <Typography
-                variant="body2"
-                sx={{ color: "secondary.main", fontSize: 12, fontWeight: 800 }}
-              >
-                NAC Fhir Admin
-              </Typography>
+              {user?.email && (
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "secondary.main",
+                    fontSize: 12,
+                    fontWeight: 800,
+                  }}
+                >
+                  {user.email}
+                </Typography>
+              )}
             </Box>
           </Toolbar>
         </AppBar>
         <Drawer
           variant="permanent"
           open={open}
-          sx={{ height: "100vh", overflow: "auto" }}
+          sx={{
+            "& .MuiDrawer-paper": {
+              height: "100vh",
+              display: "flex",
+              flexDirection: "column",
+            },
+          }}
         >
           <Toolbar
             sx={{
@@ -167,11 +189,44 @@ export const DashboardProvider = ({ children }: IReactNode) => {
               <ChevronLeftIcon />
             </IconButton>
           </Toolbar>
+
           <Divider />
-          <List component="nav">
-            <SideBarItems />
-          </List>
+
+          <Box
+            sx={{
+              flexGrow: 1,
+              overflowY: "auto",
+            }}
+          >
+            <List component="nav">
+              <SideBarItems />
+            </List>
+          </Box>
+
+          <Divider />
+
+          <Box sx={{ p: 2 }}>
+            <Button
+              fullWidth
+              variant="contained"
+              color="error"
+              endIcon={open ? <LogoutIcon sx={{ ml: 2 }} /> : undefined}
+              onClick={() => {
+                dispatch(resetUserVerification());
+                dispatch(resetOrganizationPermission());
+                router.push(ROUTES.LOGIN);
+              }}
+              sx={{
+                justifyContent: "center",
+                minWidth: 0,
+                px: open ? 2 : 1,
+              }}
+            >
+              {open ? "Logout" : <LogoutIcon />}
+            </Button>
+          </Box>
         </Drawer>
+
         <Box
           component="main"
           sx={{

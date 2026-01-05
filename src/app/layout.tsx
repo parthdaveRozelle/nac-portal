@@ -12,7 +12,7 @@ const barlow = Barlow({
 });
 
 export const metadata: Metadata = {
-  title: "NAC Medicine Portal",
+  title: "NAC Portal",
   description: "NAC Portal",
 };
 

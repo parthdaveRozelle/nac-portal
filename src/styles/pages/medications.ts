@@ -6,7 +6,7 @@ export const medicationStyles = {
     mb: 1,
     gap: { xs: 2, md: 3 },
   },
-  textFeildMargin: { margin: "10px 0" },
+  textFeildMargin: { margin: "30px 0" },
   stackMargin: { margin: "20px" },
   boxStyle: {
     ...flexUtils.flexCenter,

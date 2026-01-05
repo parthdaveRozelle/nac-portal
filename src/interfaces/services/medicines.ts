@@ -1,7 +1,7 @@
-import { IMedicines } from "../pages";
+// import { IMedicines } from "../pages";
 
 export interface IFetchMedicationsResponse {
-  results: IMedicines[];
+  results: unknown[];
   page: number;
   total: number;
   pages: number;

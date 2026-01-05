@@ -1,3 +1,5 @@
+import { VerifyOtp } from "@/components";
+
 export default function VerifyOtpPage() {
-  return <>Verify otp</>;
+  return <VerifyOtp />;
 }

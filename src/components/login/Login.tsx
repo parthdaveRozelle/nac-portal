@@ -1,13 +1,13 @@
 "use client";
 
-import { ROUTES } from "@/constants";
-// import DoctorHttpClient from "@/services/doctor/doctorService";
+import { ROUTES, TOKEN } from "@/constants";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Avatar,
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   FormControlLabel,
   IconButton,
   InputAdornment,
@@ -15,64 +15,59 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { loginStyle as styles } from "@/styles";
 import { useRouter } from "next/navigation";
 import { DoctorHttpClient } from "@/services";
+import { toastError } from "@/utils";
 
 export const Login = () => {
   const theme = useTheme();
   const router = useRouter();
-  //   const [alertCheck, setAlertCheck] = useState(false);
-  //   const [backFade, setBackFade] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [credential, setCredential] = useState({
     email: "",
     password: "",
   });
-  //   const [error, setError] = useState(false);
 
-  const handleSubmit = async () => {
-    // event.preventDefault();
-    // setBackFade(true);
-
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
     const { email, password } = credential;
 
     if (!email || !password) {
-    } else {
-      try {
-        const { error, data } = await DoctorHttpClient.loginresponse(
-          email.toLowerCase(),
-          password
-        );
-
-        if (error) {
-          toast.error(error.response?.data?.message);
-        } else {
-          toast.success(data?.message);
-          const authenticatorFlag: boolean | undefined =
-            data?.data?.isAuthenticatorEnable;
-          const params = new URLSearchParams({
-            email: email.toLowerCase(),
-            isAuthenticatorEnable: String(authenticatorFlag),
-          });
-          router.push(
-            `${
-              authenticatorFlag ? "/2-step-verification" : "/verify-otp"
-            }?${params.toString()}`
-          );
-        }
-      } catch (err) {
-        console.error(err);
-        // setError(true);
-        toast.error("Login failed. Please try again.");
-      }
+      setLoading(false);
+      return toast.error("Credentials are required");
     }
+
+    const { error, data } = await DoctorHttpClient.loginresponse(
+      email.toLowerCase(),
+      password
+    );
+
+    if (error || !data) {
+      setLoading(false);
+      return toastError(error);
+    }
+
+    toast.success(data.message);
+    setLoading(false);
+    const authenticatorFlag = data.data.isAuthenticatorEnable;
+    const params = new URLSearchParams({
+      email: email.toLowerCase(),
+      isAuthenticatorEnable: String(authenticatorFlag),
+    });
+    router.push(
+      `${
+        authenticatorFlag ? "/2-step-verification" : "/verify-otp"
+      }?${params.toString()}`
+    );
   };
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
+    if (localStorage.getItem(TOKEN)) {
       router.push(ROUTES.DASHBOARD);
     }
   }, []);
@@ -157,7 +152,11 @@ export const Login = () => {
             variant="contained"
             sx={styles.signInButton}
           >
-            Sign In
+            {loading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              "Sign In"
+            )}
           </Button>
         </Box>
       </Box>

@@ -15,3 +15,9 @@ export interface IPagination {
   page: number | null;
   limit: number | null;
 }
+
+export interface IDecodedToken {
+  _id: string;
+  doctorName: string;
+  email: string;
+}
